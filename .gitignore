@@ -1,0 +1,56 @@
+# ==========================================
+# HyperClip — Git Ignore Specification
+# ==========================================
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.cpython-*.pyc
+
+# Local Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Generated Video & Audio Outputs (Never commit large media files)
+output/
+downloads/
+temp/
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.mov
+*.wav
+*.m4a
+*.ass
+
+# Binaries (FFmpeg binaries exceed GitHub's 100MB file limit)
+bin/*.exe
+bin/*.dll
+bin/*.lib
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+# Test & Coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
