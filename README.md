@@ -50,7 +50,7 @@ Commercial tools like **OpusClip** charge **$29â€“$49/month**, limit you to 60â€
 ### 1. Installation (Windows)
 Double-click `install.bat` or run:
 ```powershell
-git clone https://github.com/your-username/hyperclip.git
+git clone https://github.com/Kartik-com/hyperclip.git
 cd hyperclip
 python -m venv .venv
 .venv\Scripts\activate
