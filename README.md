@@ -28,6 +28,7 @@
 - [📊 HyperClip vs The Competition](#-hyperclip-vs-the-competition)
 - [🖥️ HyperClip Studio (Web GUI)](#️-hyperclip-studio-web-gui)
 - [📐 Supported Framing Layouts](#-supported-framing-layouts)
+- [🎮 Live Streaming & Gaming Clipping (GTA VI)](#-live-streaming--gaming-clipping-gta-vi)
 - [🚀 Quick Start Guide](#-quick-start-guide)
   - [Prerequisites](#prerequisites)
   - [1-Click Windows Setup](#1-click-windows-setup)
@@ -119,8 +120,29 @@ HyperClip includes a built-in web studio for creators who prefer visual controls
 
 1. **Solo Active Crop (`--layout solo`)**: Dynamic 9:16 vertical crop focused on the active speaker with automatic pan smoothing.
 2. **Podcast Dual Stack (`--layout podcast`)**: Stacks host on top and guest on bottom with subtitles centered on the seam divider.
-3. **Gaming Streamer Split (`--layout gaming`)**: Stacks primary gameplay on top (65% height) with facecam below (35% height).
+3. **Gaming Streamer Split (`--layout gaming`)**: Stacks primary gameplay on top (60% height) with facecam below (40% height).
 4. **Letterbox Blur (`--layout blur`)**: Preserves the complete 16:9 frame centered with a blurred, zoomed background fill.
+
+---
+
+## 🎮 Live Streaming & Gaming Clipping (GTA VI)
+
+HyperClip includes specialized intelligence for **Twitch, YouTube Gaming, and Kick live streams**. When clipping high-action gaming broadcasts (such as *GTA VI*, *Call of Duty*, *Valorant*, or *Apex Legends*), standard 9:16 croppers fail because they either crop out the game action or cut off the streamer's webcam reaction.
+
+Using **`--layout gaming`**, HyperClip automatically:
+1. **Audio Hype & Scream Detection**: Detects volume spikes, intense reaction screams, laughter, and high-frequency soundbites.
+2. **Webcam Isolation**: Automatically isolates the streamer's corner webcam overlay from the 16:9 stream HUD.
+3. **Focal Action Tracking**: Centers the 9:16 focal window directly on high-speed gameplay (car chases, stunts, gunfights).
+4. **60/40 Stack Compositor**: Places the high-action gameplay on top (60% height) and the streamer reaction below (40% height) with animated safe-zone karaoke subtitles along the seam divider.
+
+<p align="center">
+  <img src="assets/gaming_pipeline_demo.jpg" alt="GTA VI Live Stream Clipping Showcase" width="100%">
+</p>
+
+```bash
+# Clip a gaming livestream with automatic Game + Webcam split
+python run.py "input/gta6_livestream_session.mp4" --layout gaming --max-clips 5
+```
 
 ---
 
@@ -215,6 +237,11 @@ python run.py "input/podcast_episode_12.mp4" --layout auto --max-clips 3
 #### 2. Process YouTube Video Directly
 ```bash
 python run.py "https://www.youtube.com/watch?v=VIDEO_ID" --layout solo --max-clips 5
+```
+
+#### 3. Process Live Gaming Broadcast (GTA VI, Twitch, Kick)
+```bash
+python run.py "input/gta6_session.mp4" --layout gaming --max-clips 4
 ```
 
 All rendered 9:16 vertical clips, animated subtitle tracks (`.ass`), titles, descriptions, and hashtags will be saved directly into `output/`!
