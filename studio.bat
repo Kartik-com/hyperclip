@@ -8,7 +8,12 @@ set PATH=%~dp0bin;%PATH%
 if exist "%~dp0.venv\Scripts\python.exe" (
     set "PY=%~dp0.venv\Scripts\python.exe"
 ) else (
-    set "PY=C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python311\python.exe"
+    where python >nul 2>&1
+    if %ERRORLEVEL% EQU 0 (
+        set "PY=python"
+    ) else (
+        set "PY=py"
+    )
 )
 
 echo =========================================================

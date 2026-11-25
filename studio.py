@@ -14,9 +14,14 @@ from urllib.parse import parse_qs, urlparse
 
 PORT = 8484
 BASE_DIR = Path(__file__).resolve().parent
-PARENT_DIR = BASE_DIR.parent  # D:\video
+PARENT_DIR = BASE_DIR.parent
+INPUT_DIR = BASE_DIR / "input"
 OUTPUT_DIR = BASE_DIR / "output"
 WEB_DIR = BASE_DIR / "web"
+
+# Ensure directories exist
+INPUT_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 current_job = {
     "status": "idle",
@@ -57,13 +62,21 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
 
         if path == "/api/videos":
             videos = []
-            if PARENT_DIR.exists():
-                for f in PARENT_DIR.glob("*.mp4"):
-                    videos.append({
-                        "name": f.name,
-                        "path": str(f),
-                        "size_mb": round(f.stat().st_size / (1024 * 1024), 1)
-                    })
+            seen_names = set()
+
+            # Scan input directory, project root, and parent directory
+            search_dirs = [INPUT_DIR, BASE_DIR, PARENT_DIR]
+            for s_dir in search_dirs:
+                if s_dir.exists():
+                    for f in s_dir.glob("*.mp4"):
+                        if f.name not in seen_names:
+                            seen_names.add(f.name)
+                            videos.append({
+                                "name": f.name,
+                                "path": str(f),
+                                "size_mb": round(f.stat().st_size / (1024 * 1024), 1)
+                            })
+
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
@@ -94,8 +107,14 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
 
         elif path.startswith("/media/"):
             filename = path.replace("/media/", "")
-            target_file = PARENT_DIR / filename
-            if target_file.exists() and target_file.suffix.lower() == ".mp4":
+            target_file = None
+            for s_dir in [INPUT_DIR, BASE_DIR, PARENT_DIR]:
+                candidate = s_dir / filename
+                if candidate.exists() and candidate.suffix.lower() == ".mp4":
+                    target_file = candidate
+                    break
+
+            if target_file:
                 self.serve_file(target_file, "video/mp4")
                 return
 
@@ -122,9 +141,11 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
             # Resolve /media/ URLs to real local file paths
             if video_path.startswith("/media/"):
                 clean_name = video_path.replace("/media/", "")
-                real_file = PARENT_DIR / clean_name
-                if real_file.exists():
-                    video_path = str(real_file)
+                for s_dir in [INPUT_DIR, BASE_DIR, PARENT_DIR]:
+                    candidate = s_dir / clean_name
+                    if candidate.exists():
+                        video_path = str(candidate)
+                        break
 
             if not video_path:
                 self.send_response(400)
@@ -154,9 +175,12 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
         current_job["progress"] = 10
 
         try:
+            # Check Windows venv first, then Unix venv, then system Python
             python_bin = BASE_DIR / ".venv" / "Scripts" / "python.exe"
             if not python_bin.exists():
-                python_bin = sys.executable
+                python_bin = BASE_DIR / ".venv" / "bin" / "python"
+            if not python_bin.exists():
+                python_bin = Path(sys.executable)
 
             cmd = [
                 str(python_bin),

@@ -8,7 +8,7 @@ set "PATH=%~dp0bin;%PATH%"
 :: 2. Check if .venv exists
 if not exist ".venv\Scripts\python.exe" (
     echo [HyperClip] Virtual environment not found. Setting up...
-    "%LOCALAPPDATA%\Programs\Python\Python311\python.exe" -m venv .venv
+    python -m venv .venv 2>nul || py -3 -m venv .venv 2>nul || "%LOCALAPPDATA%\Programs\Python\Python311\python.exe" -m venv .venv
     call .venv\Scripts\activate.bat
     pip install -r requirements.txt
 ) else (

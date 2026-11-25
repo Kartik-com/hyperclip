@@ -7,8 +7,16 @@ load_dotenv()
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 OUTPUT_DIR = ROOT_DIR / "output"
+INPUT_DIR = ROOT_DIR / "input"
 BIN_DIR = ROOT_DIR / "bin"
 TEMPLATES_DIR = ROOT_DIR / "templates"
+
+# Ensure local bin directory (with ffmpeg/ffprobe) is always available in PATH
+if BIN_DIR.exists():
+    bin_str = str(BIN_DIR)
+    current_path = os.environ.get("PATH", "")
+    if bin_str not in current_path:
+        os.environ["PATH"] = bin_str + os.pathsep + current_path
 
 @dataclass
 class HyperConfig:
@@ -18,8 +26,8 @@ class HyperConfig:
     llm_api_key: str = os.getenv("LLM_API_KEY", "")         # API key or dummy key
     llm_model: str = os.getenv("LLM_MODEL", "gpt-4o-mini")  # Model name expected by endpoint
     
-    # Transcription Settings
-    transcription_device: str = os.getenv("TRANSCRIPTION_DEVICE", "cuda") # cuda or cpu
+    # Transcription Settings (Defaults to 'auto' for zero-crash GPU or CPU detection)
+    transcription_device: str = os.getenv("TRANSCRIPTION_DEVICE", "auto") # auto, cuda, or cpu
     whisper_model: str = os.getenv("WHISPER_MODEL", "base")               # tiny, base, small, medium, large-v3
     
     # Video & Layout Settings

@@ -88,8 +88,9 @@ class LayoutCompositor:
         vf_chain = self.build_filter_graph(layout_type)
 
         if subtitle_ass_path:
-            # Escape path for FFmpeg filter on Windows
-            clean_sub_path = str(subtitle_ass_path).replace("\\", "/").replace(":", "\\:")
+            # Escape path for FFmpeg filter on Windows/macOS/Linux
+            # Windows drive colons (C:) must be escaped as C\:, and backslashes converted to forward slashes
+            clean_sub_path = str(Path(subtitle_ass_path).resolve()).replace("\\", "/").replace(":", "\\:").replace("'", "'\\\\''")
             vf_chain += f";[v_out]ass='{clean_sub_path}'[final_v]"
             map_v = "[final_v]"
         else:
