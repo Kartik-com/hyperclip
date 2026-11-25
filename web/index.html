@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HypeClip — Autonomous 9:16 Video Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>HyperClip — Autonomous 9:16 Video Studio</title>
   <meta name="description" content="Turn long-form videos and live streams into viral, ready-to-post 9:16 Shorts with animated subtitles, smart framing, and data-ranked hooks.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,17 +15,17 @@
       --paper: #f4f1ea;
       --paper-2: #eae5d8;
       --paper-card: #ffffff;
-      --ink: #000000;            /* Absolute black ink for solid headings */
-      --ink-body: #18181b;       /* Rich dark charcoal for maximum reading comfort */
-      --ink-secondary: #3f3f46;  /* Deep slate for high-contrast secondary copy */
-      --ink-muted: #52525b;      /* Clean muted labels */
-      --brand: #2f19eb;          /* Punchy Swiss Cobalt */
-      --hot: #f94e1e;            /* Punchy Safety Coral */
+      --ink: #000000;
+      --ink-body: #18181b;
+      --ink-secondary: #3f3f46;
+      --ink-muted: #52525b;
+      --brand: #2f19eb;
+      --hot: #f94e1e;
       --line: rgba(24, 24, 27, 0.14);
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-display: "Plus Jakarta Sans", "Bricolage Grotesque", -apple-system, sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-      --gutter: clamp(18px, 4vw, 52px);
+      --gutter: clamp(14px, 4vw, 52px);
       --ease: cubic-bezier(0.7, 0, 0.2, 1);
     }
 
@@ -42,8 +42,15 @@
       --line: rgba(250, 250, 250, 0.14);
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       margin: 0;
       background-color: var(--paper);
@@ -54,56 +61,69 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
-      overflow-x: hidden;
       transition: background-color 0.25s ease, color 0.25s ease;
     }
+
     a { color: inherit; text-decoration: none; }
-    .wrap { width: min(1160px, 100% - var(--gutter) * 2); margin-inline: auto; }
+    
+    .wrap {
+      width: min(1160px, 100% - var(--gutter) * 2);
+      margin-inline: auto;
+      max-width: 100%;
+    }
+
     .mono { font-family: var(--font-mono); }
     .display { font-family: var(--font-display); letter-spacing: -0.025em; }
 
     /* Pixel-Perfect Floating Header */
     .header-bar {
       position: sticky;
-      top: 16px;
+      top: 12px;
       z-index: 100;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 22px;
+      padding: 8px clamp(12px, 3vw, 22px);
       border: 1px solid var(--line);
       border-radius: 99px;
       background: rgba(244, 241, 234, 0.94);
       backdrop-filter: blur(16px) saturate(1.6);
       box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.14);
       transition: background-color 0.25s, border-color 0.25s;
+      max-width: 100%;
     }
+
     [data-theme="dark"] .header-bar {
       background: rgba(20, 20, 24, 0.94);
       box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.65);
     }
+
     .bar-logo {
       font-weight: 800;
-      font-size: 20px;
+      font-size: clamp(17px, 4vw, 20px);
       letter-spacing: -0.035em;
       display: flex;
       align-items: baseline;
       gap: 3px;
       color: var(--ink);
       white-space: nowrap;
+      flex-shrink: 0;
     }
+
     .bar-nav {
       display: flex;
-      gap: 26px;
+      gap: clamp(14px, 2vw, 26px);
       font-size: 14.5px;
       font-weight: 600;
     }
+
     .bar-nav a {
       color: var(--ink-secondary);
       transition: color 0.2s;
       padding: 4px 0;
       position: relative;
     }
+
     .bar-nav a:hover { color: var(--brand); }
     .bar-nav a::after {
       content: '';
@@ -120,16 +140,18 @@
     .bar-cta {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 9px 18px;
+      padding: 9px clamp(14px, 2.5vw, 20px);
       border-radius: 99px;
       background: var(--brand);
       color: #ffffff;
       font-size: 13.5px;
       font-weight: 700;
       transition: filter 0.2s, transform 0.15s;
-      white-space: nowrap;
+      box-shadow: 0 2px 8px -2px rgba(47, 25, 235, 0.4);
     }
+
     .bar-cta:hover { filter: brightness(1.15); transform: translateY(-1px); }
     .bar-cta:active { transform: translateY(0); }
 
@@ -137,36 +159,43 @@
     #mobileDrawer {
       position: fixed;
       inset: 0;
-      z-index: 95;
-      background: rgba(10, 10, 12, 0.85);
-      backdrop-filter: blur(16px);
+      z-index: 1000;
+      background: rgba(10, 10, 12, 0.92);
+      backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
+      padding: 24px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
     }
+
     #mobileDrawer.open {
       opacity: 1;
       pointer-events: auto;
     }
+
     #mobileDrawer a {
       font-family: var(--font-display);
-      font-size: 26px;
+      font-size: clamp(22px, 6vw, 30px);
       font-weight: 700;
       color: #ffffff;
       transition: color 0.2s;
+      text-align: center;
     }
+
     #mobileDrawer a:hover { color: var(--brand); }
 
     /* Architectural Blueprint Framing */
     .build-frame {
       border: 1.5px solid var(--brand);
       position: relative;
+      max-width: 100%;
     }
+
     .build-name {
       position: absolute;
       left: -1.5px;
@@ -174,17 +203,22 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 12px;
+      font-size: clamp(10px, 2.5vw, 12px);
       color: var(--brand);
       font-weight: 700;
+      max-width: calc(100% - 10px);
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .build-corner {
       width: 7px;
       height: 7px;
       background: var(--paper);
       border: 1.5px solid var(--brand);
       position: absolute;
+      z-index: 2;
     }
     .corner-tl { top: -4px; left: -4px; }
     .corner-tr { top: -4px; right: -4px; }
@@ -194,13 +228,14 @@
     .build-guide-red { border: 1.5px dashed var(--hot); }
 
     .hero-word {
-      font-size: clamp(2.8rem, 10vw, 7.2rem);
+      font-size: clamp(2rem, 9.2vw, 7.2rem);
       font-weight: 800;
       line-height: 0.92;
       letter-spacing: -0.05em;
       color: var(--brand);
-      white-space: nowrap;
-      margin: 10px 0 16px 0;
+      margin: 8px 0 14px 0;
+      max-width: 100%;
+      word-break: break-word;
     }
 
     .video-viewport {
@@ -226,11 +261,12 @@
       border-radius: 99px;
       background: var(--line);
       outline: none;
+      max-width: 100%;
     }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--brand);
       cursor: pointer;
@@ -238,7 +274,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     }
 
-    /* Premium Custom Cursor */
+    /* Premium Custom Cursor (desktop fine pointer only) */
     @media (hover: hover) and (pointer: fine) {
       #cursorDot, #cursorRing {
         position: fixed;
@@ -272,7 +308,6 @@
         box-shadow: 0 0 16px -1px rgba(79, 53, 255, 0.45);
       }
 
-      /* Hover States */
       #cursorRing.hover-button {
         width: 52px;
         height: 52px;
@@ -313,7 +348,6 @@
       }
     }
 
-    /* Fallback: Native cursor on touch devices or reduced motion */
     @media (hover: none) or (pointer: coarse), (prefers-reduced-motion: reduce) {
       #cursorDot, #cursorRing {
         display: none !important;
@@ -323,14 +357,14 @@
 </head>
 <body id="themeRoot" data-theme="light">
 
-  <div class="wrap pt-4 pb-16">
+  <div class="wrap pt-3 sm:pt-4 pb-12 sm:pb-16">
     
     <!-- ================= NAVBAR ================= -->
     <header class="header-bar">
       <!-- Brand Logo -->
-      <a href="#" class="bar-logo" aria-label="HypeClip Homepage">
-        <span class="w-3 h-3 rounded-full mr-1" style="background-color: var(--brand);"></span>
-        <span>HypeClip</span><span style="color: var(--brand);">.</span>
+      <a href="#" class="bar-logo" aria-label="HyperClip Homepage">
+        <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full mr-1 flex-shrink-0" style="background-color: var(--brand);"></span>
+        <span>HyperClip</span><span style="color: var(--brand);">.</span>
       </a>
 
       <!-- Desktop Navigation Links -->
@@ -342,22 +376,24 @@
       </nav>
 
       <!-- Right Controls -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
         <!-- Live Color Palette Swatches -->
-        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border" style="background: var(--paper-2); border-color: var(--line);" title="Swiss Architectural Palette">
-          <span class="w-3.5 h-3.5 rounded-full border border-black/15" style="background-color: #f4f1ea;"></span>
-          <span class="w-3.5 h-3.5 rounded-full border border-white/20" style="background-color: #000000;"></span>
-          <span class="w-3.5 h-3.5 rounded-full" style="background-color: #2f19eb;"></span>
-          <span class="w-3.5 h-3.5 rounded-full" style="background-color: #f94e1e;"></span>
+        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border" style="background: var(--paper-2); border-color: var(--line);" title="Swiss Architectural Palette">
+          <span class="w-3 h-3 rounded-full border border-black/15" style="background-color: #f4f1ea;"></span>
+          <span class="w-3 h-3 rounded-full border border-white/20" style="background-color: #000000;"></span>
+          <span class="w-3 h-3 rounded-full" style="background-color: #2f19eb;"></span>
+          <span class="w-3 h-3 rounded-full" style="background-color: #f94e1e;"></span>
         </div>
 
-        <!-- Mode Toggle -->
-        <button onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark mode" class="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full border transition hover:border-black/30" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
-          ● Dark Mode
+        <!-- Mode Toggle (Responsive Text) -->
+        <button onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark mode" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-full border transition hover:border-black/30 flex items-center gap-1" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
+          <span id="themeDot">●</span>
+          <span class="hidden xs:inline" id="themeLabel">Dark Mode</span>
+          <span class="xs:hidden" id="themeShort">Dark</span>
         </button>
 
-        <!-- GitHub Repo Link -->
-        <a href="https://github.com/shing/hypeclip" target="_blank" rel="noopener noreferrer" title="View on GitHub" class="p-2 rounded-full border transition hover:border-black/30 hidden sm:inline-flex" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
+        <!-- GitHub Repo Link (Desktop/Tablet) -->
+        <a href="https://github.com/shing/hyperclip" target="_blank" rel="noopener noreferrer" title="View on GitHub" class="p-2 rounded-full border transition hover:border-black/30 hidden sm:inline-flex" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         </a>
 
@@ -368,7 +404,7 @@
         </a>
 
         <!-- Mobile Hamburger Button -->
-        <button onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="Open navigation menu" class="md:hidden p-2 rounded-full border flex flex-col justify-center items-center gap-1 w-9 h-9" style="background-color: var(--paper-2); border-color: var(--line);">
+        <button onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="Open navigation menu" aria-expanded="false" class="md:hidden p-2 rounded-full border flex flex-col justify-center items-center gap-1 w-9 h-9 flex-shrink-0 cursor-pointer" style="background-color: var(--paper-2); border-color: var(--line);">
           <span class="w-4 h-0.5 rounded-full transition-all" style="background-color: var(--ink);"></span>
           <span class="w-4 h-0.5 rounded-full transition-all" style="background-color: var(--ink);"></span>
           <span class="w-4 h-0.5 rounded-full transition-all" style="background-color: var(--ink);"></span>
@@ -377,44 +413,44 @@
     </header>
 
     <!-- ================= MOBILE DRAWER ================= -->
-    <div id="mobileDrawer">
-      <button onclick="toggleMobileMenu()" aria-label="Close menu" class="absolute top-6 right-6 text-white text-3xl font-bold">✕</button>
+    <div id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+      <button onclick="toggleMobileMenu()" aria-label="Close menu" class="absolute top-6 right-6 text-white text-3xl font-bold p-2 cursor-pointer">✕</button>
       <a href="#preview" onclick="toggleMobileMenu()">Studio Preview</a>
       <a href="#features" onclick="toggleMobileMenu()">Features</a>
       <a href="#how-it-works" onclick="toggleMobileMenu()">How It Works</a>
       <a href="#github-section" onclick="toggleMobileMenu()">GitHub</a>
-      <a href="#preview" onclick="toggleMobileMenu()" class="bar-cta mt-4 text-base py-3 px-7">
+      <a href="#preview" onclick="toggleMobileMenu()" class="bar-cta mt-4 text-base py-3.5 px-8 w-full max-w-xs justify-center">
         Try Studio ↓
       </a>
     </div>
 
     <!-- ================= 1. HERO SECTION ================= -->
-    <section class="pt-12 pb-8">
-      <div class="flex items-center gap-2.5 pb-2 text-xs sm:text-sm font-bold" style="color: var(--ink-secondary);">
-        <span class="w-2.5 h-2.5 rounded-full pulse-hot" style="background-color: var(--hot);"></span>
-        <span class="uppercase tracking-wider">Autonomous 9:16 Video Studio · Open Source</span>
+    <section class="pt-8 sm:pt-12 pb-6 sm:pb-8">
+      <div class="flex items-center gap-2 pb-2 text-xs sm:text-sm font-bold flex-wrap" style="color: var(--ink-secondary);">
+        <span class="w-2.5 h-2.5 rounded-full pulse-hot flex-shrink-0" style="background-color: var(--hot);"></span>
+        <span class="uppercase tracking-wider text-[11px] sm:text-xs">Autonomous 9:16 Video Studio · Open Source</span>
       </div>
 
       <div class="hero-word">
-        HYPECLIP<span style="color: var(--hot);">.</span>
+        HYPERCLIP<span style="color: var(--hot);">.</span>
       </div>
 
       <div class="max-w-3xl">
-        <h1 class="display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight" style="color: var(--ink);">
+        <h1 class="display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight break-words" style="color: var(--ink);">
           Turn any video into viral 9:16 clips.
         </h1>
-        <p class="text-base sm:text-lg md:text-xl font-normal mt-3.5 leading-relaxed" style="color: var(--ink-secondary);">
+        <p class="text-[15px] sm:text-lg md:text-xl font-normal mt-3 sm:mt-3.5 leading-relaxed break-words" style="color: var(--ink-secondary);">
           Extract high-retention moments automatically, test 3 viral hook formulas, and export vertical clips with safe-zone subtitles for Shorts, Reels, and TikTok.
         </p>
 
-        <!-- Bold, Generous Buttons -->
-        <div class="flex flex-wrap items-center gap-3.5 pt-6">
-          <a href="#preview" class="bar-cta text-sm sm:text-base font-bold py-3.5 px-7 shadow-md">
+        <!-- Touch-Friendly, Responsive Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-5 sm:pt-6 w-full sm:w-auto">
+          <a href="#preview" class="bar-cta w-full sm:w-auto text-center justify-center text-sm sm:text-base font-bold py-3.5 px-6 sm:px-7 shadow-md">
             <span>Explore Interactive Studio</span>
             <span class="text-lg leading-none">↓</span>
           </a>
-          <a href="https://github.com/shing/hypeclip" target="_blank" rel="noopener noreferrer" class="text-sm sm:text-base font-bold px-6 py-3.5 rounded-full border transition hover:border-black/50 inline-flex items-center gap-2.5 shadow-sm" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <a href="https://github.com/shing/hyperclip" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto text-center justify-center text-sm sm:text-base font-bold px-6 py-3.5 rounded-full border transition hover:border-black/50 inline-flex items-center gap-2.5 shadow-sm" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             <span>Star on GitHub</span>
           </a>
         </div>
@@ -422,25 +458,27 @@
     </section>
 
     <!-- ================= 2. PRODUCT PREVIEW (STANDALONE INTERACTIVE STUDIO) ================= -->
-    <section id="preview" class="py-8">
-      <div class="build-frame rounded-2xl p-6 sm:p-8 md:p-9 relative shadow-sm" style="background-color: var(--paper-2);">
+    <section id="preview" class="py-6 sm:py-8">
+      <div class="build-frame rounded-2xl p-3.5 sm:p-6 md:p-9 relative shadow-sm" style="background-color: var(--paper-2);">
         
         <span class="build-corner corner-tl"></span>
         <span class="build-corner corner-tr"></span>
         <span class="build-corner corner-bl"></span>
         <span class="build-corner corner-br"></span>
 
+        <!-- Adaptive Top Label that never clips -->
         <div class="build-name">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-          <span id="workbenchTitle">Interactive Studio Preview · 1080 × 1920 (9:16)</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="flex-shrink-0"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          <span id="workbenchTitle" class="truncate">Interactive Studio · 9:16</span>
+          <span class="hidden sm:inline">· 1080 × 1920</span>
         </div>
 
-        <div class="grid grid-cols-12 gap-7 md:gap-9 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-7 md:gap-9 items-start">
           
           <!-- LEFT: 9:16 Focal Video Stage -->
-          <div class="col-span-12 md:col-span-5 flex flex-col items-center">
+          <div class="col-span-1 md:col-span-5 flex flex-col items-center w-full min-w-0">
             
-            <div id="videoContainer" class="w-[230px] sm:w-[245px] aspect-[9/16] build-frame rounded-xl relative overflow-hidden flex flex-col justify-between shadow-2xl bg-black">
+            <div id="videoContainer" class="w-full max-w-[230px] sm:max-w-[245px] aspect-[9/16] build-frame rounded-xl relative overflow-hidden flex flex-col justify-between shadow-2xl bg-black mx-auto">
               
               <span class="build-corner corner-tl"></span>
               <span class="build-corner corner-tr"></span>
@@ -453,59 +491,59 @@
               </video>
 
               <!-- Safe Zone Guide Lines -->
-              <div id="safeZoneOverlay" class="absolute inset-0 build-guide-red pointer-events-none z-20 flex flex-col justify-between p-3 opacity-80">
-                <div class="flex justify-between text-[9px] font-extrabold" style="color: var(--hot);">
+              <div id="safeZoneOverlay" class="absolute inset-0 build-guide-red pointer-events-none z-20 flex flex-col justify-between p-2.5 sm:p-3 opacity-80">
+                <div class="flex justify-between text-[8px] sm:text-[9px] font-extrabold" style="color: var(--hot);">
                   <span>TOP SAFE</span>
                   <span>1080×1920</span>
                 </div>
-                <div id="safeZoneBottom" class="flex justify-between items-end text-[9px] font-extrabold pb-12" style="color: var(--hot);">
+                <div id="safeZoneBottom" class="flex justify-between items-end text-[8px] sm:text-[9px] font-extrabold pb-12" style="color: var(--hot);">
                   <span id="safeZoneLabel">240PX SAFE ZONE</span>
                   <span>UI CLEARANCE</span>
                 </div>
               </div>
 
               <!-- Top Live Editable Hook Banner -->
-              <div class="px-3 pt-3 z-30">
-                <div id="hookDisplay" class="p-2.5 rounded-lg border text-xs sm:text-sm font-bold leading-snug text-center shadow" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
+              <div class="px-2.5 sm:px-3 pt-2.5 sm:pt-3 z-30">
+                <div id="hookDisplay" class="p-2 sm:p-2.5 rounded-lg border text-[11px] sm:text-xs md:text-sm font-bold leading-snug text-center shadow break-words" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
                   "The counter-intuitive trade-off that changed the outcome."
                 </div>
               </div>
 
               <!-- Word-by-Word Caption Preview -->
-              <div class="px-3 pb-8 z-30 text-center">
-                <div class="inline-block px-3.5 py-1.5 rounded-md border text-xs sm:text-sm font-extrabold shadow" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
+              <div class="px-2.5 sm:px-3 pb-6 sm:pb-8 z-30 text-center">
+                <div class="inline-block px-3 py-1.5 rounded-md border text-[11px] sm:text-xs md:text-sm font-extrabold shadow" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
                   THE MOMENT IT ALL <span style="color: var(--brand);">CLICKED</span>
                 </div>
               </div>
 
             </div>
 
-            <!-- Video Transport Controls -->
-            <div class="w-[230px] sm:w-[245px] mt-3 flex items-center justify-between text-xs sm:text-sm font-bold">
-              <button onclick="toggleVideoPlay()" id="btnPlay" class="px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 shadow-sm" style="background-color: var(--brand); color: #fff;">
+            <!-- Video Transport Controls (Fully Responsive Width) -->
+            <div class="w-full max-w-[230px] sm:max-w-[245px] mt-3 flex items-center justify-between text-xs sm:text-sm font-bold gap-2">
+              <button onclick="toggleVideoPlay()" id="btnPlay" class="px-2.5 sm:px-3 py-1.5 rounded-lg font-bold transition flex items-center justify-center gap-1 shadow-sm flex-1 cursor-pointer" style="background-color: var(--brand); color: #fff;">
                 ▶ PLAY
               </button>
-              <button onclick="toggleVideoMute()" id="btnMute" class="px-3 py-1.5 rounded-lg border transition shadow-sm" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
+              <button onclick="toggleVideoMute()" id="btnMute" class="px-2.5 sm:px-3 py-1.5 rounded-lg border transition shadow-sm flex-1 cursor-pointer" style="background-color: var(--paper-card); border-color: var(--line); color: var(--ink);">
                 🔇 UNMUTE
               </button>
-              <span id="timecodeDisplay" class="mono text-xs font-semibold" style="color: var(--ink-secondary);">00:00 / 00:00</span>
+              <span id="timecodeDisplay" class="mono text-[11px] sm:text-xs font-semibold whitespace-nowrap" style="color: var(--ink-secondary);">00:00 / 00:00</span>
             </div>
 
           </div>
 
-          <!-- RIGHT: Controls Deck -->
-          <div class="col-span-12 md:col-span-7 space-y-4">
+          <!-- RIGHT: Controls Deck (Adaptive Grid Layout) -->
+          <div class="col-span-1 md:col-span-7 space-y-3.5 sm:space-y-4 w-full min-w-0">
             
             <!-- Ingest Footage Quick Selector -->
-            <div class="border rounded-xl p-4 sm:p-5 space-y-2.5 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-              <div class="flex items-center justify-between">
+            <div class="border rounded-xl p-3.5 sm:p-5 space-y-2.5 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
                 <span class="font-extrabold uppercase tracking-wider text-xs sm:text-sm" style="color: var(--ink);">Demo Footage</span>
                 <label class="cursor-pointer font-bold text-xs sm:text-sm underline transition hover:opacity-80" style="color: var(--brand);">
                   Upload Custom MP4 ↗
                   <input type="file" accept="video/mp4,video/webm" class="hidden" onchange="handleManualFile(event)">
                 </label>
               </div>
-              <select id="videoSelect" onchange="onVideoSelectChange(this.value)" aria-label="Select source video" class="w-full p-3 rounded-lg border text-sm sm:text-base font-semibold outline-none cursor-pointer" style="background-color: var(--paper); border-color: var(--line); color: var(--ink);">
+              <select id="videoSelect" onchange="onVideoSelectChange(this.value)" aria-label="Select source video" class="w-full p-2.5 sm:p-3 rounded-lg border text-xs sm:text-sm md:text-base font-semibold outline-none cursor-pointer max-w-full" style="background-color: var(--paper); border-color: var(--line); color: var(--ink);">
                 <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">Keynote & Product Demo (Landscape 1080p)</option>
                 <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4">Outdoor Adventure & Drone Cut (Landscape)</option>
                 <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">Podcast & Studio Dialogue (Sample)</option>
@@ -513,7 +551,7 @@
             </div>
 
             <!-- Crop Pan Controller -->
-            <div class="border rounded-xl p-4 sm:p-5 space-y-2 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
+            <div class="border rounded-xl p-3.5 sm:p-5 space-y-2 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
               <div class="flex items-center justify-between">
                 <span class="font-extrabold uppercase tracking-wider text-xs sm:text-sm" style="color: var(--ink);">Dynamic Crop Pan</span>
                 <span id="cropValText" class="font-extrabold text-xs sm:text-sm" style="color: var(--brand);">50% (Centered)</span>
@@ -526,49 +564,50 @@
               </div>
             </div>
 
-            <!-- 3 A/B Hook Formulas -->
-            <div class="border rounded-xl p-4 sm:p-5 space-y-3 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-              <div class="flex items-center justify-between">
+            <!-- 3 A/B Hook Formulas (Stacks cleanly on mobile & tablet) -->
+            <div class="border rounded-xl p-3.5 sm:p-5 space-y-3 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
+              <div class="flex items-center justify-between flex-wrap gap-1">
                 <span class="font-extrabold uppercase tracking-wider text-xs sm:text-sm" style="color: var(--ink);">A/B Retention Hook Matrix</span>
                 <span class="font-bold text-xs sm:text-sm" style="color: var(--brand);">3 Tested Formulas</span>
               </div>
 
-              <input type="text" id="liveHookInput" value="The counter-intuitive trade-off that changed the outcome." oninput="onHookInputChange(this.value)" aria-label="Edit hook banner" class="w-full p-3 rounded-lg border font-bold text-sm sm:text-base outline-none transition focus:border-brand shadow-inner" style="background-color: var(--paper); border-color: var(--brand); color: var(--ink);">
+              <input type="text" id="liveHookInput" value="The counter-intuitive trade-off that changed the outcome." oninput="onHookInputChange(this.value)" aria-label="Edit hook banner" class="w-full p-2.5 sm:p-3 rounded-lg border font-bold text-xs sm:text-sm md:text-base outline-none transition focus:border-brand shadow-inner" style="background-color: var(--paper); border-color: var(--brand); color: var(--ink);">
 
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-                <button onclick="applyPresetHook('The subtle decision that altered the entire outcome.', '2.46×')" class="p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--brand);">
-                  <div class="text-xs font-extrabold tracking-wide" style="color: var(--brand);">2.46× MULTIPLIER</div>
-                  <div class="font-bold text-sm sm:text-base mt-1" style="color: var(--ink);">Number Promise</div>
+              <!-- Mobile: 1 col | Large Mobile: 3 col | Tablet/Small Desktop: 1 col | Large Desktop: 3 col -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3 gap-2 sm:gap-2.5 pt-1">
+                <button onclick="applyPresetHook('The subtle decision that altered the entire outcome.', '2.46×')" class="p-2.5 sm:p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--brand);">
+                  <div class="text-[11px] sm:text-xs font-extrabold tracking-wide" style="color: var(--brand);">2.46× MULTIPLIER</div>
+                  <div class="font-bold text-xs sm:text-sm md:text-base mt-0.5 sm:mt-1 break-words" style="color: var(--ink);">Number Promise</div>
                 </button>
 
-                <button onclick="applyPresetHook('Why 90% of creators optimize the wrong bottleneck.', '1.68×')" class="p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--line);">
-                  <div class="text-xs font-extrabold tracking-wide" style="color: var(--hot);">1.68× MULTIPLIER</div>
-                  <div class="font-bold text-sm sm:text-base mt-1" style="color: var(--ink);">Shock Fact</div>
+                <button onclick="applyPresetHook('Why 90% of creators optimize the wrong bottleneck.', '1.68×')" class="p-2.5 sm:p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--line);">
+                  <div class="text-[11px] sm:text-xs font-extrabold tracking-wide" style="color: var(--hot);">1.68× MULTIPLIER</div>
+                  <div class="font-bold text-xs sm:text-sm md:text-base mt-0.5 sm:mt-1 break-words" style="color: var(--ink);">Shock Fact</div>
                 </button>
 
-                <button onclick="applyPresetHook('Notice what happens the exact second this technique is applied.', '1.48×')" class="p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--line);">
-                  <div class="text-xs font-extrabold tracking-wide" style="color: var(--ink);">1.48× MULTIPLIER</div>
-                  <div class="font-bold text-sm sm:text-base mt-1" style="color: var(--ink);">Curiosity Gap</div>
+                <button onclick="applyPresetHook('Notice what happens the exact second this technique is applied.', '1.48×')" class="p-2.5 sm:p-3 rounded-lg border text-left cursor-pointer transition hover:border-black/50" style="background-color: var(--paper-2); border-color: var(--line);">
+                  <div class="text-[11px] sm:text-xs font-extrabold tracking-wide" style="color: var(--ink);">1.48× MULTIPLIER</div>
+                  <div class="font-bold text-xs sm:text-sm md:text-base mt-0.5 sm:mt-1 break-words" style="color: var(--ink);">Curiosity Gap</div>
                 </button>
               </div>
             </div>
 
-            <!-- Safe-Zone Slider & Export CTA -->
-            <div class="border rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-              <div class="flex items-center gap-3">
-                <span class="font-extrabold text-sm sm:text-base" style="color: var(--ink);">Safe Zone:</span>
-                <input type="range" min="160" max="320" value="240" oninput="onSafeZoneChange(this.value)" aria-label="Safe Zone Height" style="accent-color: var(--hot); width: 100px;">
-                <span id="safeZoneDisplay" class="font-extrabold text-base sm:text-lg" style="color: var(--hot);">240px</span>
+            <!-- Safe-Zone Slider & Export CTA (Adaptive Stack on Mobile & Tablet, Row on XL Desktop) -->
+            <div class="border rounded-xl p-3.5 sm:p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 sm:gap-4 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
+              <div class="flex items-center justify-between xl:justify-start gap-2.5 sm:gap-3 w-full xl:w-auto">
+                <span class="font-extrabold text-xs sm:text-sm md:text-base whitespace-nowrap" style="color: var(--ink);">Safe Zone:</span>
+                <input type="range" min="160" max="320" value="240" oninput="onSafeZoneChange(this.value)" aria-label="Safe Zone Height" style="accent-color: var(--hot);" class="w-24 sm:w-28 flex-1 sm:flex-initial">
+                <span id="safeZoneDisplay" class="font-extrabold text-sm sm:text-base md:text-lg whitespace-nowrap" style="color: var(--hot);">240px</span>
               </div>
 
-              <button onclick="runLocalPipeline()" id="btnRunPipeline" class="bar-cta py-3 px-6 text-sm sm:text-base font-bold self-start sm:self-auto shadow-md">
+              <button onclick="runLocalPipeline()" id="btnRunPipeline" class="bar-cta w-full xl:w-auto py-3 px-4 sm:px-6 text-xs sm:text-sm md:text-base font-bold justify-center text-center shadow-md cursor-pointer whitespace-normal xl:whitespace-nowrap">
                 <span>Export 9:16 Clips (3 Hooks)</span>
-                <span class="text-lg leading-none">→</span>
+                <span class="text-base sm:text-lg leading-none">→</span>
               </button>
             </div>
 
             <!-- Feedback Log Toast -->
-            <div id="pipelineToast" class="hidden p-3.5 rounded-xl border text-sm font-bold transition shadow-md" style="background-color: var(--paper-2); border-color: var(--brand); color: var(--ink);">
+            <div id="pipelineToast" class="hidden p-3.5 rounded-xl border text-xs sm:text-sm font-bold transition shadow-md" style="background-color: var(--paper-2); border-color: var(--brand); color: var(--ink);">
               <span id="toastMsg">Ready</span>
             </div>
 
@@ -580,45 +619,45 @@
     </section>
 
     <!-- ================= 3. FEATURES (HIGH READABILITY) ================= -->
-    <section id="features" class="py-12 border-t" style="border-color: var(--line);">
-      <div class="mb-8">
+    <section id="features" class="py-8 sm:py-12 border-t" style="border-color: var(--line);">
+      <div class="mb-6 sm:mb-8">
         <div class="text-xs sm:text-sm uppercase tracking-wider font-extrabold" style="color: var(--brand);">Core Capabilities</div>
-        <h2 class="display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mt-1.5" style="color: var(--ink);">
+        <h2 class="display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mt-1 sm:mt-1.5 break-words" style="color: var(--ink);">
           Everything needed for high-retention short-form video.
         </h2>
       </div>
 
-      <!-- Spacious, High-Contrast 4-Column Numbered Features -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Spacious, High-Contrast Responsive Grid: 1 col on mobile, 2 col on tablet, 4 col on desktop -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         
-        <div class="p-6 rounded-2xl border space-y-2.5 shadow-sm transition hover:shadow-md" style="background-color: var(--paper-card); border-color: var(--line);">
+        <div class="p-5 sm:p-6 rounded-2xl border space-y-2 sm:space-y-2.5 shadow-sm transition hover:shadow-md min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
           <div class="mono font-extrabold text-sm sm:text-base" style="color: var(--brand);">01</div>
-          <h3 class="font-extrabold text-lg sm:text-xl tracking-tight leading-snug" style="color: var(--ink);">Smart Soundbite Detection</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight leading-snug break-words" style="color: var(--ink);">Smart Soundbite Detection</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Pinpoints high-retention 30–60 second dialogue segments automatically based on speech pacing and narrative emphasis.
           </p>
         </div>
 
-        <div class="p-6 rounded-2xl border space-y-2.5 shadow-sm transition hover:shadow-md" style="background-color: var(--paper-card); border-color: var(--line);">
+        <div class="p-5 sm:p-6 rounded-2xl border space-y-2 sm:space-y-2.5 shadow-sm transition hover:shadow-md min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
           <div class="mono font-extrabold text-sm sm:text-base" style="color: var(--hot);">02</div>
-          <h3 class="font-extrabold text-lg sm:text-xl tracking-tight leading-snug" style="color: var(--ink);">A/B Hook Multiplier</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight leading-snug break-words" style="color: var(--ink);">A/B Hook Multiplier</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Generates 3 distinct viral headline angles (Curiosity Gap, Shock Fact, Number Promise) to test across platforms.
           </p>
         </div>
 
-        <div class="p-6 rounded-2xl border space-y-2.5 shadow-sm transition hover:shadow-md" style="background-color: var(--paper-card); border-color: var(--line);">
+        <div class="p-5 sm:p-6 rounded-2xl border space-y-2 sm:space-y-2.5 shadow-sm transition hover:shadow-md min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
           <div class="mono font-extrabold text-sm sm:text-base" style="color: var(--brand);">03</div>
-          <h3 class="font-extrabold text-lg sm:text-xl tracking-tight leading-snug" style="color: var(--ink);">Dynamic 9:16 Centering</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight leading-snug break-words" style="color: var(--ink);">Dynamic 9:16 Centering</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Auto-reframes landscape footage to vertical 9:16 format, keeping active speakers centered without manual keyframing.
           </p>
         </div>
 
-        <div class="p-6 rounded-2xl border space-y-2.5 shadow-sm transition hover:shadow-md" style="background-color: var(--paper-card); border-color: var(--line);">
+        <div class="p-5 sm:p-6 rounded-2xl border space-y-2 sm:space-y-2.5 shadow-sm transition hover:shadow-md min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
           <div class="mono font-extrabold text-sm sm:text-base" style="color: var(--hot);">04</div>
-          <h3 class="font-extrabold text-lg sm:text-xl tracking-tight leading-snug" style="color: var(--ink);">Safe-Zone Shield</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight leading-snug break-words" style="color: var(--ink);">Safe-Zone Shield</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Enforces strict platform margins so captions and titles never sit behind TikTok, Reels, or Shorts interface buttons.
           </p>
         </div>
@@ -627,42 +666,43 @@
     </section>
 
     <!-- ================= 4. HOW IT WORKS (HIGH READABILITY) ================= -->
-    <section id="how-it-works" class="py-12 border-t" style="border-color: var(--line);">
-      <div class="mb-8">
+    <section id="how-it-works" class="py-8 sm:py-12 border-t" style="border-color: var(--line);">
+      <div class="mb-6 sm:mb-8">
         <div class="text-xs sm:text-sm uppercase tracking-wider font-extrabold" style="color: var(--brand);">How It Works</div>
-        <h2 class="display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mt-1.5" style="color: var(--ink);">
+        <h2 class="display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mt-1 sm:mt-1.5 break-words" style="color: var(--ink);">
           From raw footage to published clip in three steps.
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+      <!-- 1 col on mobile, 3 col on tablet & desktop -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 sm:gap-7">
         
-        <div class="p-7 sm:p-8 rounded-2xl border space-y-3.5 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-          <div class="w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-base" style="background-color: var(--paper-2); color: var(--brand);">
+        <div class="p-5 sm:p-7 md:p-8 rounded-2xl border space-y-3 sm:space-y-3.5 shadow-sm min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-extrabold text-sm sm:text-base flex-shrink-0" style="background-color: var(--paper-2); color: var(--brand);">
             1
           </div>
-          <h3 class="font-extrabold text-xl sm:text-2xl tracking-tight" style="color: var(--ink);">Ingest Raw Footage</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-lg sm:text-xl md:text-2xl tracking-tight break-words" style="color: var(--ink);">Ingest Raw Footage</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Select any landscape video, podcast, or stream recording. The engine extracts audio and timestamps automatically.
           </p>
         </div>
 
-        <div class="p-7 sm:p-8 rounded-2xl border space-y-3.5 shadow-sm" style="background-color: var(--paper-card); border-color: var(--brand);">
-          <div class="w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-base" style="background-color: var(--brand); color: #ffffff;">
+        <div class="p-5 sm:p-7 md:p-8 rounded-2xl border space-y-3 sm:space-y-3.5 shadow-sm min-w-0" style="background-color: var(--paper-card); border-color: var(--brand);">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-extrabold text-sm sm:text-base flex-shrink-0" style="background-color: var(--brand); color: #ffffff;">
             2
           </div>
-          <h3 class="font-extrabold text-xl sm:text-2xl tracking-tight" style="color: var(--ink);">Detect & Formulate Hooks</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-lg sm:text-xl md:text-2xl tracking-tight break-words" style="color: var(--ink);">Detect & Formulate Hooks</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             AI scores retention moments and crafts 3 viral hook variations tailored to maximize click-through and completion rates.
           </p>
         </div>
 
-        <div class="p-7 sm:p-8 rounded-2xl border space-y-3.5 shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-          <div class="w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-base" style="background-color: var(--paper-2); color: var(--hot);">
+        <div class="p-5 sm:p-7 md:p-8 rounded-2xl border space-y-3 sm:space-y-3.5 shadow-sm min-w-0" style="background-color: var(--paper-card); border-color: var(--line);">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-extrabold text-sm sm:text-base flex-shrink-0" style="background-color: var(--paper-2); color: var(--hot);">
             3
           </div>
-          <h3 class="font-extrabold text-xl sm:text-2xl tracking-tight" style="color: var(--ink);">Export & Publish 9:16</h3>
-          <p class="text-[15px] sm:text-base leading-relaxed font-normal" style="color: var(--ink-secondary);">
+          <h3 class="font-extrabold text-lg sm:text-xl md:text-2xl tracking-tight break-words" style="color: var(--ink);">Export & Publish 9:16</h3>
+          <p class="text-sm sm:text-[15px] md:text-base leading-relaxed font-normal break-words" style="color: var(--ink-secondary);">
             Export crisp 1080×1920 vertical MP4s with word-synced animated subtitles positioned safely within platform UI bounds.
           </p>
         </div>
@@ -671,38 +711,39 @@
     </section>
 
     <!-- ================= 5. GITHUB & FINAL CTA ================= -->
-    <section id="github-section" class="py-12 border-t" style="border-color: var(--line);">
-      <div class="border rounded-2xl p-7 sm:p-10 relative overflow-hidden shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-7 items-center">
+    <section id="github-section" class="py-8 sm:py-12 border-t" style="border-color: var(--line);">
+      <div class="border rounded-2xl p-4 sm:p-7 md:p-10 relative overflow-hidden shadow-sm" style="background-color: var(--paper-card); border-color: var(--line);">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-7 items-center">
           
-          <div class="md:col-span-7 space-y-3">
+          <div class="md:col-span-7 space-y-3 min-w-0 max-w-full">
             <div class="text-xs sm:text-sm uppercase tracking-wider font-extrabold" style="color: var(--brand);">Open-Source Project</div>
-            <h2 class="display text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight" style="color: var(--ink);">
+            <h2 class="display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight break-words" style="color: var(--ink);">
               Built transparently for creators and developers.
             </h2>
-            <p class="text-base sm:text-lg leading-relaxed" style="color: var(--ink-secondary);">
-              HypeClip is an open-source video intelligence project. The core clipping engine and architecture are designed for high-retention short-form production.
+            <p class="text-sm sm:text-base md:text-lg leading-relaxed break-words" style="color: var(--ink-secondary);">
+              HyperClip is an open-source video intelligence project. The core clipping engine and architecture are designed for high-retention short-form production.
             </p>
-            <div class="flex flex-wrap gap-3 pt-2">
-              <a href="https://github.com/shing/hypeclip" target="_blank" rel="noopener noreferrer" class="bar-cta inline-flex items-center gap-2.5 text-sm sm:text-base font-bold py-3 px-6 shadow-sm">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-3 pt-2 w-full sm:w-auto">
+              <a href="https://github.com/shing/hyperclip" target="_blank" rel="noopener noreferrer" class="bar-cta w-full sm:w-auto justify-center text-center inline-flex items-center gap-2.5 text-sm sm:text-base font-bold py-3 px-6 shadow-sm">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                 <span>View on GitHub</span>
               </a>
 
-              <button onclick="copyCloneCommand()" id="btnCopyClone" class="text-sm sm:text-base font-bold px-5 py-3 rounded-full border transition hover:border-black/50 inline-flex items-center gap-2 shadow-sm" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
-                <svg id="copyIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <button onclick="copyCloneCommand()" id="btnCopyClone" class="w-full sm:w-auto justify-center text-center text-sm sm:text-base font-bold px-5 py-3 rounded-full border transition hover:border-black/50 inline-flex items-center gap-2 shadow-sm cursor-pointer" style="background-color: var(--paper-2); border-color: var(--line); color: var(--ink);">
+                <svg id="copyIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="flex-shrink-0"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 <span id="copyLabel">Copy clone command</span>
               </button>
             </div>
           </div>
 
-          <div class="md:col-span-5 p-4 rounded-xl space-y-2 border shadow-inner" style="background-color: #0c0d12; border-color: var(--line); color: #f2f4f8;">
+          <!-- Code Box with min-w-0 to prevent Grid blowout -->
+          <div class="md:col-span-5 p-3.5 sm:p-4 rounded-xl space-y-2 border shadow-inner min-w-0 max-w-full overflow-hidden" style="background-color: #0c0d12; border-color: var(--line); color: #f2f4f8;">
             <div class="flex items-center justify-between border-b pb-2 border-white/10 text-white/70 text-xs sm:text-sm font-semibold">
               <span>GitHub Repository</span>
               <span class="mono text-xs font-bold text-brand">GIT</span>
             </div>
-            <pre class="mono overflow-x-auto text-xs sm:text-sm leading-relaxed text-green-400 py-1"><code>git clone https://github.com/shing/hypeclip.git
-cd hypeclip</code></pre>
+            <pre class="mono overflow-x-auto text-[11px] sm:text-xs md:text-sm leading-relaxed text-green-400 py-1 max-w-full"><code class="break-all sm:break-normal whitespace-pre-wrap sm:whitespace-pre">git clone https://github.com/shing/hyperclip.git
+cd hyperclip</code></pre>
           </div>
 
         </div>
@@ -710,29 +751,29 @@ cd hypeclip</code></pre>
     </section>
 
     <!-- ================= 6. CLEAN MINIMAL FOOTER ================= -->
-    <footer class="pt-10 pb-6 border-t text-sm" style="border-color: var(--line); color: var(--ink-secondary);">
+    <footer class="pt-8 sm:pt-10 pb-6 border-t text-sm" style="border-color: var(--line); color: var(--ink-secondary);">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 pb-6">
         <div class="space-y-1">
           <div class="bar-logo text-lg">
-            <span class="w-3 h-3 rounded-full mr-1" style="background-color: var(--brand);"></span>
-            <span>HypeClip</span><span style="color: var(--brand);">.</span>
+            <span class="w-3 h-3 rounded-full mr-1 flex-shrink-0" style="background-color: var(--brand);"></span>
+            <span>HyperClip</span><span style="color: var(--brand);">.</span>
           </div>
           <p class="text-xs sm:text-sm" style="color: var(--ink-secondary);">
             Autonomous 9:16 vertical video studio for creators and teams.
           </p>
         </div>
 
-        <div class="flex flex-wrap gap-6 text-xs sm:text-sm font-bold" style="color: var(--ink);">
+        <div class="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm font-bold" style="color: var(--ink);">
           <a href="#preview" class="hover:underline">Studio Preview</a>
           <a href="#features" class="hover:underline">Features</a>
           <a href="#how-it-works" class="hover:underline">How It Works</a>
-          <a href="https://github.com/shing/hypeclip" target="_blank" rel="noopener noreferrer" class="hover:underline">GitHub ↗</a>
+          <a href="https://github.com/shing/hyperclip" target="_blank" rel="noopener noreferrer" class="hover:underline">GitHub ↗</a>
         </div>
       </div>
 
-      <div class="pt-5 border-t flex flex-col sm:flex-row justify-between items-center gap-2 text-xs sm:text-sm" style="border-color: var(--line); color: var(--ink-secondary);">
-        <div>© 2026 HypeClip Open Source Project. All rights reserved.</div>
-        <div class="flex items-center gap-2">
+      <div class="pt-5 border-t flex flex-col sm:flex-row justify-between items-center gap-2 text-xs sm:text-sm text-center sm:text-left" style="border-color: var(--line); color: var(--ink-secondary);">
+        <div>© 2026 HyperClip Open Source Project. All rights reserved.</div>
+        <div class="flex items-center gap-2 flex-wrap justify-center">
           <span>Swiss Architectural Aesthetics</span>
           <span>·</span>
           <span>MIT Licensed</span>
@@ -749,15 +790,31 @@ cd hypeclip</code></pre>
     const btnMute = document.getElementById('btnMute');
     let isDark = false;
 
-    // Mobile Drawer
+    // Mobile Drawer with Scroll Lock and Escape Key
     function toggleMobileMenu() {
       const drawer = document.getElementById('mobileDrawer');
-      drawer.classList.toggle('open');
+      const btn = document.getElementById('mobileMenuBtn');
+      const isOpen = drawer.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const drawer = document.getElementById('mobileDrawer');
+        if (drawer.classList.contains('open')) {
+          toggleMobileMenu();
+        }
+      }
+    });
 
     // Copy Clone Command
     function copyCloneCommand() {
-      const cmd = 'git clone https://github.com/shing/hypeclip.git';
+      const cmd = 'git clone https://github.com/shing/hyperclip.git';
       navigator.clipboard.writeText(cmd).then(() => {
         const label = document.getElementById('copyLabel');
         const original = label.innerText;
@@ -843,49 +900,28 @@ cd hypeclip</code></pre>
       document.getElementById('safeZoneBottom').style.paddingBottom = (px / 20) + 'px';
     }
 
-    // Theme Switcher
+    // Theme Switcher (Adaptive text for mobile)
     function toggleTheme() {
       isDark = !isDark;
       const root = document.getElementById('themeRoot');
-      const btn = document.getElementById('themeBtn');
+      const dot = document.getElementById('themeDot');
+      const label = document.getElementById('themeLabel');
+      const short = document.getElementById('themeShort');
       if (isDark) {
         root.setAttribute('data-theme', 'dark');
-        btn.innerText = '○ Light Mode';
+        dot.innerText = '○';
+        label.innerText = 'Light Mode';
+        short.innerText = 'Light';
       } else {
         root.setAttribute('data-theme', 'light');
-        btn.innerText = '● Dark Mode';
+        dot.innerText = '●';
+        label.innerText = 'Dark Mode';
+        short.innerText = 'Dark';
       }
     }
 
-
-    // Connect to local backend if studio.py is running
-    async function initLocalBackend() {
-      try {
-        const res = await fetch('/api/videos');
-        if (res.ok) {
-          const videos = await res.json();
-          if (videos && videos.length > 0) {
-            const select = document.getElementById('videoSelect');
-            const defaultOptions = select.innerHTML;
-            select.innerHTML = '';
-            videos.forEach(v => {
-              const opt = document.createElement('option');
-              opt.value = `/media/${v.name}`;
-              opt.innerText = `[Local] ${v.name} (${v.size_mb} MB)`;
-              select.appendChild(opt);
-            });
-            select.innerHTML += defaultOptions;
-            onVideoSelectChange(`/media/${videos[0].name}`);
-          }
-        }
-      } catch (e) {
-        // Runs standalone in browser with sample video smoothly
-      }
-    }
-    window.addEventListener('DOMContentLoaded', initLocalBackend);
-
-    // Interactive Auto-Clip Simulation and Real Backend Pipeline Runner
-    async function runLocalPipeline() {
+    // Interactive Auto-Clip Simulation with Clean Toast (100% Client-Side)
+    function runLocalPipeline() {
       const toast = document.getElementById('pipelineToast');
       const toastMsg = document.getElementById('toastMsg');
       const btn = document.getElementById('btnRunPipeline');
@@ -895,44 +931,6 @@ cd hypeclip</code></pre>
       btn.innerText = "Processing...";
       toastMsg.innerText = "⏳ Ingesting footage & scoring soundbites...";
 
-      const currentVideo = document.getElementById('videoSelect').value;
-
-      try {
-        const res = await fetch('/api/run', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ video_path: currentVideo, layout: 'auto', max_clips: 3 })
-        });
-        if (res.ok) {
-          let pollTimer = setInterval(async () => {
-            try {
-              const statusRes = await fetch('/api/status');
-              if (statusRes.ok) {
-                const job = await statusRes.json();
-                if (job.logs && job.logs.length > 0) {
-                  toastMsg.innerText = job.logs[job.logs.length - 1];
-                }
-                if (job.status === 'completed') {
-                  clearInterval(pollTimer);
-                  toastMsg.innerText = "✓ 3 Vertical clips generated with safe-zone captions!";
-                  btn.disabled = false;
-                  btn.innerHTML = '<span>Export 9:16 Clips (3 Hooks)</span><span class="text-lg leading-none">→</span>';
-                  setTimeout(() => { toast.classList.add('hidden'); }, 3500);
-                } else if (job.status === 'error') {
-                  clearInterval(pollTimer);
-                  toastMsg.innerText = "❌ Pipeline error: " + (job.logs[job.logs.length - 1] || 'Unknown');
-                  btn.disabled = false;
-                  btn.innerHTML = '<span>Export 9:16 Clips (3 Hooks)</span><span class="text-lg leading-none">→</span>';
-                }
-              }
-            } catch (err) {}
-          }, 1200);
-          return;
-        }
-      } catch (e) {
-        // Fallback for static browser preview without backend
-      }
-
       setTimeout(() => {
         toastMsg.innerText = "🧠 Synthesizing 3 A/B hooks & dynamic 9:16 crop...";
       }, 1000);
@@ -940,7 +938,7 @@ cd hypeclip</code></pre>
       setTimeout(() => {
         toastMsg.innerText = "✓ 3 Vertical clips generated with safe-zone captions!";
         btn.disabled = false;
-        btn.innerHTML = '<span>Export 9:16 Clips (3 Hooks)</span><span class="text-lg leading-none">→</span>';
+        btn.innerHTML = '<span>Export 9:16 Clips (3 Hooks)</span><span class="text-base sm:text-lg leading-none">→</span>';
         setTimeout(() => {
           toast.classList.add('hidden');
         }, 3500);
@@ -949,7 +947,6 @@ cd hypeclip</code></pre>
 
     // ================= PREMIUM CUSTOM CURSOR INTERACTION =================
     (function initCustomCursor() {
-      // Activate only on devices with fine pointer & hover support, respecting reduced motion
       const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!hasFinePointer || prefersReducedMotion) return;
@@ -965,7 +962,6 @@ cd hypeclip</code></pre>
       let rafId = null;
 
       function render() {
-        // Natural lerp easing for outer ring
         ringX += (mouseX - ringX) * 0.18;
         ringY += (mouseY - ringY) * 0.18;
 
@@ -1008,12 +1004,10 @@ cd hypeclip</code></pre>
         dot.classList.remove('clicking');
       });
 
-      // Context-aware interaction states via event delegation
       document.addEventListener('pointerover', (e) => {
         const target = e.target;
         if (!target || !(target instanceof Element)) return;
 
-        // Native input protection: hide custom cursor over inputs/textareas to preserve native I-beam & selection
         if (target.closest('input, textarea, select, [contenteditable="true"]')) {
           isInputHover = true;
           ring.classList.add('hidden-cursor');
@@ -1025,7 +1019,6 @@ cd hypeclip</code></pre>
           dot.classList.remove('hidden-cursor');
         }
 
-        // Button hover
         if (target.closest('button, .bar-cta, [role="button"], input[type="file"]')) {
           ring.classList.add('hover-button');
           ring.classList.remove('hover-link', 'hover-card');
@@ -1033,7 +1026,6 @@ cd hypeclip</code></pre>
           return;
         }
 
-        // Link hover
         if (target.closest('a')) {
           ring.classList.add('hover-link');
           ring.classList.remove('hover-button', 'hover-card');
@@ -1041,7 +1033,6 @@ cd hypeclip</code></pre>
           return;
         }
 
-        // Clickable card hover (preset hook cards, capability cards, video stage)
         if (target.closest('.cursor-pointer, .hover\\:shadow-md, .hover\\:border-black\\/50')) {
           ring.classList.add('hover-card');
           dot.classList.add('hover-card');
@@ -1049,12 +1040,10 @@ cd hypeclip</code></pre>
           return;
         }
 
-        // Reset to default state
         ring.classList.remove('hover-button', 'hover-link', 'hover-card');
         dot.classList.remove('hover-card');
       }, { passive: true });
 
-      // Pause RAF when page is hidden to save GPU/CPU cycles
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           if (rafId) cancelAnimationFrame(rafId);
@@ -1064,7 +1053,6 @@ cd hypeclip</code></pre>
         }
       });
 
-      // Start rendering loop
       rafId = requestAnimationFrame(render);
     })();
   </script>
